@@ -30,8 +30,8 @@ pipeline {
       }
         stage('deploy'){
         steps {
-          sshPublisher(publishers: [sshPublisherDesc(configName: 'Docker-host', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'docker rmi -f schoolwebsite:v.${BUILD_NUMBER}; docker build -t calvin2019/schoolwebsite:v.${BUILD_NUMBER} .;docker push calvin2019/schoolwebsite:v.${BUILD_NUMBER}', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: 'webapp/target', sourceFiles: '**/*.war')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])   
-           
+           sshPublisher(publishers: [sshPublisherDesc(configName: 'docker-host', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'ansible-playbook -i /etc/ansible/hosts /etc/ansible/docker-image.yml', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '//etc//ansible', remoteDirectorySDF: false, removePrefix: 'webapp/target', sourceFiles: '**/*.war')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])   
+           deploy adapters: [tomcat8(credentialsId: 'tomcatID', path: '', url: 'http://3.87.202.188:8080/')], contextPath: 'slave', war: '**/*.war'
            
         }
       
